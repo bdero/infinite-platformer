@@ -1,5 +1,7 @@
+local Camera = require 'camera'
+
 IDEAL_SIZE = {x=640, y=480}
-local camera = require('camera')
+
 
 function love.load(arg)
   love.window.setMode(IDEAL_SIZE['x'], IDEAL_SIZE['y'], {
@@ -10,6 +12,8 @@ function love.load(arg)
 
   love.physics.setMeter(64)
   world = love.physics.newWorld(0, 9.81*64, true)
+
+  camera = Camera()
 
   objects = {}
 

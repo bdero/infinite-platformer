@@ -1,6 +1,8 @@
-utils = require('utils')
+local class = require 'lib/middleclass'
+utils = require 'utils'
 
-local camera = {}
+local camera = class('Camera')
+
 camera.x = 0
 camera.y = 0
 camera.currentX = 0
@@ -14,6 +16,13 @@ camera.shakeFrequency = 0.5
 camera.shakeMagnitude = 15
 
 camera.time = 0
+
+function camera:initialize(params)
+  params = params or {}
+  for i, v in ipairs(params) do
+    self[i] = v
+  end
+end
 
 function camera:set()
   love.graphics.push()
