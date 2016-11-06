@@ -1,5 +1,6 @@
 local Camera = require 'camera'
 local Player = require 'player'
+local Map = require 'map'
 
 IDEAL_SIZE = {x=640, y=480}
 
@@ -13,6 +14,8 @@ function love.load(arg)
 
   camera = Camera()
   camera:setActive()
+
+  map = Map()
 end
 
 function love.update(dt)
@@ -20,8 +23,7 @@ function love.update(dt)
 end
 
 function love.draw()
-
   Camera.set()
-    love.graphics.circle('fill', 0, 0, 50, 5)
+    map:draw()
   Camera.unset()
 end

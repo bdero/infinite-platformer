@@ -72,9 +72,10 @@ function camera:unset()
   love.graphics.pop()
 end
 
-function camera:viewport()
-  local ww, wh = love.graphics.getDimensions()/2*self.scale
-  return self.x - ww, self.y - wy, self.x + ww, self.y + wy
+function camera:getViewport()
+  local ww, wh = love.graphics.getDimensions()
+  local sw, sh = ww*self.scaleX/2, wh*self.scaleY/2
+  return self.x - sw, self.y - sh, self.x + sw, self.y + sw
 end
 
 function camera:move(dx, dy)
