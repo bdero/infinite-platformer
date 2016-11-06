@@ -1,8 +1,8 @@
 utils = require('utils')
 
 local camera = {}
-camera.x = 50
-camera.y = 50
+camera.x = 0
+camera.y = 0
 camera.currentX = 0
 camera.currentY = 0
 camera.lerpFactor = 0.2
