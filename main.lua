@@ -12,19 +12,16 @@ function love.load(arg)
   love.graphics.getBackgroundColor(200, 210, 230)
 
   camera = Camera()
+  camera:setActive()
 end
 
 function love.update(dt)
-  camera.x, camera.y = objects.player.body:getPosition()
-  vx, vy = objects.player.body:getLinearVelocity()
-  objects.player.body:setLinearVelocity(vx, vy + 9.8)
-
-  camera:update(dt)
+  Camera.update(dt)
 end
 
 function love.draw()
 
-  camera:set()
+  Camera.set()
     love.graphics.circle('fill', 0, 0, 50, 5)
-  camera:unset()
+  Camera.unset()
 end

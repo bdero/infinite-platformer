@@ -17,11 +17,35 @@ camera.shakeMagnitude = 15
 
 camera.time = 0
 
+camera.static.ACTIVE = nil
+
+camera.static.set = function()
+  if camera.static.ACTIVE then
+    camera.static.ACTIVE:set()
+  end
+end
+
+camera.static.unset = function()
+  if camera.static.ACTIVE then
+    camera.static.ACTIVE:unset()
+  end
+end
+
+camera.static.update = function(dt)
+  if camera.static.ACTIVE then
+    camera.static.ACTIVE:update(dt)
+  end
+end
+
 function camera:initialize(params)
   params = params or {}
   for i, v in ipairs(params) do
     self[i] = v
   end
+end
+
+function camera:setActive()
+  camera.static.ACTIVE = self
 end
 
 function camera:set()
@@ -46,6 +70,11 @@ end
 
 function camera:unset()
   love.graphics.pop()
+end
+
+function camera:viewport()
+  local ww, wh = love.graphics.getDimensions()/2*self.scale
+  return self.x - ww, self.y - wy, self.x + ww, self.y + wy
 end
 
 function camera:move(dx, dy)
