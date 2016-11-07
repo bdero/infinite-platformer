@@ -1,6 +1,8 @@
 local Camera = require 'camera'
-local Player = require 'player'
 local Map = require 'map'
+local Player = require 'player'
+
+local camera, map, player
 
 function love.load(arg)
   local sizeX, sizeY = 640, 480
@@ -13,18 +15,22 @@ function love.load(arg)
 
   camera = Camera({idealX=sizeX, idealY=sizeY})
   camera:setActive()
-  camera:setScale(3, 3)
+  camera:setScale(1, 1)
 
   map = Map()
   map:setActive()
+
+  player = Player()
 end
 
 function love.update(dt)
+  player:update(dt)
   Camera.update(dt)
 end
 
 function love.draw()
   Camera.set()
     Map.draw()
+    player:draw()
   Camera.unset()
 end

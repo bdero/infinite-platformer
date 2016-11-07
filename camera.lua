@@ -41,9 +41,7 @@ end
 
 function Camera:initialize(settings)
   local settings = settings or {}
-  print(settings)
   for i, v in pairs(settings) do
-    print(i, v)
     self[i] = v
   end
 
