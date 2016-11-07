@@ -17,22 +17,27 @@ function Player:initialize()
 end
 
 function Player:update(dt)
+  if love.keyboard.isDown('a', 'left') then
+    self.accX = -150
+  elseif love.keyboard.isDown('d', 'right') then
+    self.accX = 150
+  end
+
   self.velX = self.velX + self.accX*dt
   self.velY = self.velY + self.accY*dt
 
   self.x = self.x + self.velX*dt
   self.y = self.y + self.velY*dt
 
-  self:bbProcessCollision()
+  local yCol = self:bbProcessCollision()
+
+  if yCol then
+    self.velY = 0
+  end
 end
 
 function Player:draw()
-  local color = {255, 100, 100}
-  if self:bbIsColliding() then
-    color = {100, 255, 100}
-  end
-
-  love.graphics.setColor(unpack(color))
+  love.graphics.setColor(100, 100, 100)
   love.graphics.rectangle('fill', self:bbGetRect():getXYWH())
 end
 

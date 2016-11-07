@@ -21,8 +21,7 @@ function MapSensor:isOverlappingMap()
     for x = ax, bx do
       if Map.ACTIVE:sample(x, y) then
         local overlap = absoluteRect:isOverlapping(Rect(
-          x*Map.TILE_SIZE - Map.TILE_SIZE/2,
-          y*Map.TILE_SIZE - Map.TILE_SIZE/2,
+          x*Map.TILE_SIZE, y*Map.TILE_SIZE,
           Map.TILE_SIZE, Map.TILE_SIZE
         ))
         if overlap then
@@ -33,6 +32,17 @@ function MapSensor:isOverlappingMap()
   end
 
   return false
+end
+
+function MapSensor:processCollision(incX, incY)
+  local collision = false
+  while self:isOverlappingMap() do
+    collision = true
+    self.parent.x = self.parent.x + incX
+    self.parent.y = self.parent.y + incY
+  end
+
+  return collision
 end
 
 return MapSensor
