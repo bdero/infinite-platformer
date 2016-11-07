@@ -10,6 +10,10 @@ function Rect:initialize(x, y, w, h, centered)
   self.centered = centered or true
 end
 
+function Rect:addPosition(x, y)
+  return Rect(self.x + x, self.y + y, self.width, self.height, self.centered)
+end
+
 function Rect:getXYWH()
   local x, y, w, h = self.x, self.y, self.width, self.height
   if self.centered then
@@ -39,7 +43,7 @@ function Rect:isOverlapping(other)
                +----------+
                     oy2
   ]]
-  local cy, cx, cy2, cx2 = self:getAABB()
+  local cx, cy, cx2, cy2 = self:getAABB()
   local ox, oy, ox2, oy2 = other:getAABB()
 
   return not(cx > ox2 or cx2 < ox or cy > oy2 or cy2 < oy)

@@ -87,7 +87,7 @@ function Camera:getViewport()
   local ww, wh = love.graphics.getDimensions()
   local scaleFactor = self:getViewportScale()
   local sw, sh = ww*self.scaleX/scaleFactor/2, wh*self.scaleY/scaleFactor/2
-  return self.x - sw, self.y - sh, self.x + sw, self.y + sh
+  return self.currentX - sw, self.currentY - sh, self.currentX + sw, self.currentY + sh
 end
 
 function Camera:move(dx, dy)
@@ -106,8 +106,8 @@ function Camera:scale(sx, sy)
 end
 
 function Camera:setPosition(x, y)
-  self.currentX = x or self.currentX
-  self.currentY = y or self.currentY
+  self.x = x or self.x
+  self.y = y or self.y
 end
 
 function Camera:setScale(sx, sy)

@@ -27,7 +27,12 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  love.graphics.setColor(255, 100, 100)
+  local color = {255, 100, 100}
+  if self:bbIsColliding() then
+    color = {100, 255, 100}
+  end
+
+  love.graphics.setColor(unpack(color))
   love.graphics.rectangle('fill', self:bbGetRect():getXYWH())
 end
 

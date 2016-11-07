@@ -25,6 +25,7 @@ end
 
 function love.update(dt)
   player:update(dt)
+  Camera.ACTIVE:setPosition(player.x, player.y)
   Camera.update(dt)
 end
 

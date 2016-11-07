@@ -25,13 +25,16 @@ function Map:sample(x, y)
   return noise < 0.56
 end
 
+function Map:getMinMaxAABB(ax, ay, bx, by)
+  return
+    math.floor(ax/Map.TILE_SIZE), math.floor(ay/Map.TILE_SIZE),
+    math.ceil(bx/Map.TILE_SIZE) + 1, math.ceil(by/Map.TILE_SIZE) + 1
+end
+
 function Map:draw()
   local ax, ay, bx, by = Camera.ACTIVE:getViewport()
 
-  local minx = math.floor(ax/Map.TILE_SIZE)
-  local miny = math.floor(ay/Map.TILE_SIZE)
-  local maxx = math.ceil(bx/Map.TILE_SIZE) + 1
-  local maxy = math.ceil(by/Map.TILE_SIZE) + 1
+  local minx, miny, maxx, maxy = self:getMinMaxAABB(ax, ay, bx, by)
 
   love.graphics.setColor(0, 0, 0)
   for y = miny, maxy do
