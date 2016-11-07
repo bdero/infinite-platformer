@@ -5,13 +5,24 @@ Camera = require 'camera'
 Map = class('Map')
 
 Map.static.TILE_SIZE = 20
+Map.static.ACTIVE = nil
+
+Map.static.draw = function()
+  if Map.ACTIVE then
+    Map.ACTIVE:draw()
+  end
+end
 
 function Map:initialize()
 end
 
+function Map:setActive()
+  Map.ACTIVE = self
+end
+
 function Map:sample(x, y)
-  local noise = love.math.noise(x*0.117, y*0.117)
-  return noise < 0.5
+  local noise = love.math.noise(x*0.117/3, y*0.117)
+  return noise < 0.56
 end
 
 function Map:draw()

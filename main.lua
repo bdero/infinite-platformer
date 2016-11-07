@@ -17,6 +17,7 @@ function love.load(arg)
   camera:setScale(3, 3)
 
   map = Map()
+  map:setActive()
 end
 
 function love.update(dt)
@@ -25,6 +26,6 @@ end
 
 function love.draw()
   Camera.set()
-    map:draw()
+    Map.draw()
   Camera.unset()
 end
