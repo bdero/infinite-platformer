@@ -54,7 +54,7 @@ function camera:set()
 
   local windowX, windowY = love.graphics.getDimensions()
 
-  local scale = (windowX/IDEAL_SIZE['x'] + windowY/IDEAL_SIZE['y'])/2
+  local scale = self.getViewportScale()
   love.graphics.scale(1/self.scaleX*scale, 1/self.scaleY*scale)
 
   local shakeX = love.math.noise(self.time*self.shakeFrequency)*self.shakeMagnitude
@@ -62,10 +62,15 @@ function camera:set()
 
   local x, y = self.currentX + shakeX, self.currentY + shakeY
   if self.centered then
-    x = x - windowX/2/scale
-    y = y - windowY/2/scale
+    x = x - windowX*self.scaleX/scale/2
+    y = y - windowY*self.scaleY/scale/2
   end
   love.graphics.translate(-x, -y)
+end
+
+function camera:getViewportScale()
+  local windowX, windowY = love.graphics.getDimensions()
+  return (windowX/IDEAL_SIZE['x'] + windowY/IDEAL_SIZE['y'])/2
 end
 
 function camera:unset()
@@ -74,8 +79,9 @@ end
 
 function camera:getViewport()
   local ww, wh = love.graphics.getDimensions()
-  local sw, sh = ww*self.scaleX/2, wh*self.scaleY/2
-  return self.x - sw, self.y - sh, self.x + sw, self.y + sw
+  local scaleFactor = self.getViewportScale()
+  local sw, sh = ww*self.scaleX/scaleFactor/2, wh*self.scaleY/scaleFactor/2
+  return self.x - sw, self.y - sh, self.x + sw, self.y + sh
 end
 
 function camera:move(dx, dy)

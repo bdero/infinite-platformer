@@ -11,19 +11,20 @@ end
 
 function Map:sample(x, y)
   local noise = love.math.noise(x*0.117, y*0.117)
-  return noise > 0.5
+  return noise < 0.5
 end
 
 function Map:draw()
   local ax, ay, bx, by = Camera.ACTIVE:getViewport()
 
-  local minx = math.floor(ax/Map.TILE_SIZE) - 1
-  local miny = math.floor(ay/Map.TILE_SIZE) - 1
-  local maxx = math.floor(ax/Map.TILE_SIZE) + 1
-  local maxy = math.floor(ay/Map.TILE_SIZE) + 1
+  local minx = math.floor(ax/Map.TILE_SIZE)
+  local miny = math.floor(ay/Map.TILE_SIZE)
+  local maxx = math.ceil(bx/Map.TILE_SIZE) + 1
+  local maxy = math.ceil(by/Map.TILE_SIZE) + 1
 
-  for y = ay, by do
-    for x = ax, bx do
+  love.graphics.setColor(0, 0, 0)
+  for y = miny, maxy do
+    for x = minx, maxx do
       if self:sample(x, y) then
         love.graphics.rectangle(
           'fill',

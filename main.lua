@@ -10,10 +10,11 @@ function love.load(arg)
     resizable=true, minwidth=130, minheight=100, highdpi=true
   })
   love.window.setTitle("Test")
-  love.graphics.getBackgroundColor(200, 210, 230)
+  love.graphics.setBackgroundColor(200, 210, 230)
 
   camera = Camera()
   camera:setActive()
+  camera:setScale(3, 3)
 
   map = Map()
 end
