@@ -29,10 +29,13 @@ function Player:update(dt)
   self.x = self.x + self.velX*dt
   self.y = self.y + self.velY*dt
 
-  local yCol = self:bbProcessCollision()
+  local top, bottom, left, right = self:bbProcessCollision()
 
-  if yCol then
+  if top or bottom then
     self.velY = 0
+  end
+  if left or right then
+    self.velX = 0
   end
 end
 
