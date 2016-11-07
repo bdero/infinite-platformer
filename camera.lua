@@ -1,5 +1,5 @@
 local class = require 'lib/middleclass'
-utils = require 'utils'
+local utils = require 'utils'
 
 local Camera = class('Camera')
 
@@ -8,6 +8,8 @@ Camera.y = 0
 Camera.currentX = 0
 Camera.currentY = 0
 Camera.lerpFactor = 0.2
+Camera.idealX = 640
+Camera.idealY = 480
 Camera.scaleX = 1
 Camera.scaleY = 1
 Camera.rotation = 0
@@ -38,8 +40,10 @@ Camera.static.update = function(dt)
 end
 
 function Camera:initialize(settings)
-  settings = settings or {}
-  for i, v in ipairs(settings) do
+  local settings = settings or {}
+  print(settings)
+  for i, v in pairs(settings) do
+    print(i, v)
     self[i] = v
   end
 
@@ -58,11 +62,11 @@ function Camera:set()
 
   local windowX, windowY = love.graphics.getDimensions()
 
-  local scale = self.getViewportScale()
+  local scale = self:getViewportScale()
   love.graphics.scale(1/self.scaleX*scale, 1/self.scaleY*scale)
 
   local shakeX = love.math.noise(self.time*self.shakeFrequency)*self.shakeMagnitude
-  local shakeY = love.math.noise(self.time*self.shakeFrequency + 900.3)*self.shakeMagnitude
+  local shakeY = love.math.noise(self.time*self.shakeFrequency + 900.327)*self.shakeMagnitude
 
   local x, y = self.currentX + shakeX, self.currentY + shakeY
   if self.centered then
@@ -74,7 +78,7 @@ end
 
 function Camera:getViewportScale()
   local windowX, windowY = love.graphics.getDimensions()
-  return (windowX/IDEAL_SIZE['x'] + windowY/IDEAL_SIZE['y'])/2
+  return (windowX/self.idealX + windowY/self.idealY)/2
 end
 
 function Camera:unset()
@@ -83,7 +87,7 @@ end
 
 function Camera:getViewport()
   local ww, wh = love.graphics.getDimensions()
-  local scaleFactor = self.getViewportScale()
+  local scaleFactor = self:getViewportScale()
   local sw, sh = ww*self.scaleX/scaleFactor/2, wh*self.scaleY/scaleFactor/2
   return self.x - sw, self.y - sh, self.x + sw, self.y + sh
 end

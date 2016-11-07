@@ -2,17 +2,16 @@ local Camera = require 'camera'
 local Player = require 'player'
 local Map = require 'map'
 
-IDEAL_SIZE = {x=640, y=480}
-
-
 function love.load(arg)
-  love.window.setMode(IDEAL_SIZE['x'], IDEAL_SIZE['y'], {
+  local sizeX, sizeY = 640, 480
+
+  love.window.setMode(sizeX, sizeY, {
     resizable=true, minwidth=130, minheight=100, highdpi=true
   })
   love.window.setTitle("Test")
   love.graphics.setBackgroundColor(200, 210, 230)
 
-  camera = Camera()
+  camera = Camera({idealX=sizeX, idealY=sizeY})
   camera:setActive()
   camera:setScale(3, 3)
 
