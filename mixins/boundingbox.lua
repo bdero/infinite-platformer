@@ -14,10 +14,10 @@ function BoundingBox.bbInit(self, width, height)
     0, -height/2 + sensorWidth/2, 10, sensorWidth
   ))
   self._bbLeftSensor = MapSensor(self, Rect(
-    -width/2 + sensorWidth/2, sensorWidth, 10
+    -width/2 + sensorWidth/2, 0, sensorWidth, 10
   ))
   self._bbRightSensor = MapSensor(self, Rect(
-    width/2 - sensorWidth/2, sensorWidth, 10
+    width/2 - sensorWidth/2, 0, sensorWidth, 10
   ))
 end
 

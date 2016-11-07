@@ -1,5 +1,6 @@
 local class = require 'lib/middleclass'
 local BoundingBox = require 'mixins/boundingbox'
+local utils = require 'utils'
 
 local Player = class('Player')
 
@@ -8,7 +9,7 @@ Player.y = 0
 Player.velX = 0
 Player.velY = 0
 Player.accX = 0
-Player.accY = 9.8*20
+Player.accY = 9.8*200
 
 Player:include(BoundingBox)
 
@@ -17,14 +18,24 @@ function Player:initialize()
 end
 
 function Player:update(dt)
-  if love.keyboard.isDown('a', 'left') then
-    self.accX = -150
-  elseif love.keyboard.isDown('d', 'right') then
-    self.accX = 150
+  local leftPressed = love.keyboard.isDown('a', 'left')
+  local rightPressed = love.keyboard.isDown('d', 'right')
+  local jumpPressed = love.keyboard.isDown('space')
+
+  self.accX = 0
+  if leftPressed then
+    self.accX = self.accX - 600
+  end
+  if rightPressed then
+    self.accX = self.accX + 600
   end
 
-  self.velX = self.velX + self.accX*dt
+  self.velX = utils.clamp(-300, 300, self.velX + self.accX*dt)
   self.velY = self.velY + self.accY*dt
+
+  if jumpPressed then
+    self.velY = -300
+  end
 
   self.x = self.x + self.velX*dt
   self.y = self.y + self.velY*dt
