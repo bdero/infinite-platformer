@@ -53,7 +53,7 @@ function Player:update(dt)
   end
 
   if jumpPressed and bottom then
-    self.velY = -400
+    self.velY = -430
   end
 end
 

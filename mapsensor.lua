@@ -1,4 +1,5 @@
 local class = require 'lib/middleclass'
+local utils = require 'utils'
 local Map = require 'map'
 local Rect = require 'rect'
 
@@ -15,7 +16,7 @@ end
 
 function MapSensor:isOverlappingMap()
   local absoluteRect = self:getRect()
-  ax, ay, bx, by = Map.ACTIVE:getMinMaxAABB(absoluteRect:getAABB())
+  local ax, ay, bx, by = Map.ACTIVE:getMinMaxAABB(absoluteRect:getAABB())
 
   for y = ay, by do
     for x = ax, bx do
@@ -34,12 +35,18 @@ function MapSensor:isOverlappingMap()
   return false
 end
 
-function MapSensor:processCollision(incX, incY)
+function MapSensor:processCollision(axisName, axisSign)
+  axisSign = axisSign
   local collision = false
+
   while self:isOverlappingMap() do
     collision = true
-    self.parent.x = self.parent.x + incX
-    self.parent.y = self.parent.y + incY
+    self.parent[axisName] = self.parent[axisName] + axisSign
+  end
+
+  if collision then
+    local operation = axisSign < 0 and math.ceil or math.floor
+    self.parent[axisName] = operation(self.parent[axisName])
   end
 
   return collision

@@ -4,7 +4,7 @@ local MapSensor = require 'mapsensor'
 local BoundingBox = {}
 
 function BoundingBox.bbInit(self, width, height)
-  local sensorWidth = 5
+  local sensorWidth = 6
   self._bbWidth = width
   self._bbHeight = height
   self._bbBottomSensor = MapSensor(self, Rect(
@@ -26,10 +26,10 @@ function BoundingBox.bbGetRect(self)
 end
 
 function BoundingBox.bbProcessCollision(self)
-  local left = self._bbLeftSensor:processCollision(1, 0)
-  local right = self._bbRightSensor:processCollision(-1, 0)
-  local bottom = self._bbBottomSensor:processCollision(0, -1)
-  local top = self._bbTopSensor:processCollision(0, 1)
+  local left = self.velX <= 0 and self._bbLeftSensor:processCollision('x', 1) or false
+  local right = self.velX >= 0 and self._bbRightSensor:processCollision('x', -1) or false
+  local bottom = self.velY >= 0 and self._bbBottomSensor:processCollision('y', -1) or false
+  local top = self.velY <= 0 and self._bbTopSensor:processCollision('y', 1) or false
 
   return top, bottom, left, right
 end
