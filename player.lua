@@ -33,8 +33,11 @@ function Player:update(dt)
   self.velX = utils.clamp(-300, 300, self.velX + self.accX*dt)
   self.velY = self.velY + self.accY*dt
 
-  if jumpPressed then
-    self.velY = -300
+  if not leftPressed and self.velX < 0 then
+    self.velX = math.min(0, self.velX + 600*dt)
+  end
+  if not rightPressed and self.velX > 0 then
+    self.velX = math.max(0, self.velX - 600*dt)
   end
 
   self.x = self.x + self.velX*dt
@@ -47,6 +50,10 @@ function Player:update(dt)
   end
   if left or right then
     self.velX = 0
+  end
+
+  if jumpPressed and bottom then
+    self.velY = -400
   end
 end
 
