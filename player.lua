@@ -9,7 +9,7 @@ Player.y = 0
 Player.velX = 0
 Player.velY = 0
 Player.accX = 0
-Player.accY = 9.8*200
+Player.accY = 0.098
 
 Player:include(BoundingBox)
 
@@ -18,34 +18,30 @@ function Player:initialize()
 end
 
 function Player:fixedUpdate()
-  
-end
-
-function Player:update(dt)
   local leftPressed = love.keyboard.isDown('a', 'left')
   local rightPressed = love.keyboard.isDown('d', 'right')
   local jumpPressed = love.keyboard.isDown('space')
 
   self.accX = 0
   if leftPressed then
-    self.accX = self.accX - 600
+    self.accX = self.accX - 0.1
   end
   if rightPressed then
-    self.accX = self.accX + 600
+    self.accX = self.accX + 0.1
   end
 
-  self.velX = utils.clamp(-300, 300, self.velX + self.accX*dt)
-  self.velY = self.velY + self.accY*dt
+  self.velX = utils.clamp(-3, 3, self.velX + self.accX)
+  self.velY = self.velY + self.accY
 
   if not leftPressed and self.velX < 0 then
-    self.velX = math.min(0, self.velX + 600*dt)
+    self.velX = math.min(0, self.velX + 0.1)
   end
   if not rightPressed and self.velX > 0 then
-    self.velX = math.max(0, self.velX - 600*dt)
+    self.velX = math.max(0, self.velX - 0.1)
   end
 
-  self.x = self.x + self.velX*dt
-  self.y = self.y + self.velY*dt
+  self.x = self.x + self.velX
+  self.y = self.y + self.velY
 
   local top, bottom, left, right = self:bbProcessCollision()
 
@@ -57,8 +53,12 @@ function Player:update(dt)
   end
 
   if jumpPressed and bottom then
-    self.velY = -430
+    self.velY = -3.5
   end
+end
+
+function Player:update(dt)
+
 end
 
 function Player:draw()
