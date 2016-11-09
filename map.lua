@@ -1,4 +1,5 @@
 class = require 'lib/middleclass'
+utils = require 'utils'
 Camera = require 'camera'
 
 
@@ -13,7 +14,9 @@ Map.static.draw = function()
   end
 end
 
-function Map:initialize()
+function Map:initialize(seed)
+  math.randomseed(os.clock())
+  self.seed = seed or math.random()*99999999
 end
 
 function Map:setActive()
@@ -21,8 +24,8 @@ function Map:setActive()
 end
 
 function Map:sample(x, y)
-  local noise = love.math.noise(x*0.117/3, y*0.117)
-  return noise < 0.56
+  local noise = love.math.noise(x*0.117/3, y*0.117, self.seed)
+  return noise < 0.46
 end
 
 function Map:getMinMaxAABB(ax, ay, bx, by)

@@ -1,5 +1,7 @@
 local utils = {}
 
+utils.MAX_NUMBER = 900719925474099
+
 function utils.asymptote(dist, divisor, dt)
   return (1 - 1/(dt/divisor + 1))*dist
 end

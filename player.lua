@@ -17,6 +17,10 @@ function Player:initialize()
   self:bbInit(16, 32)
 end
 
+function Player:fixedUpdate()
+  
+end
+
 function Player:update(dt)
   local leftPressed = love.keyboard.isDown('a', 'left')
   local rightPressed = love.keyboard.isDown('d', 'right')
