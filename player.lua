@@ -37,17 +37,24 @@ function Player:fixedUpdate()
   self.velX = utils.clamp(-5, 5, self.velX + self.accX)
   self.velY = self.velY + self.accY
 
-  if not leftPressed and self.velX < 0 then
+  if (not leftPressed or rightPressed) and self.velX < 0 then
     self.velX = math.min(0, self.velX + 0.1)
   end
-  if not rightPressed and self.velX > 0 then
+  if (not rightPressed or leftPressed) and self.velX > 0 then
     self.velX = math.max(0, self.velX - 0.1)
   end
 
-  self.x = self.x + self.velX
-  self.y = self.y + self.velY
+  local top, bottom, left, right = false, false, false, false
+  for i = 1, 4 do
+    self.x = self.x + self.velX/4
+    self.y = self.y + self.velY/4
 
-  local top, bottom, left, right = self:bbProcessCollision()
+    local t, b, l, r = self:bbProcessCollision()
+    top = top or t
+    bottom = bottom or b
+    left = left or l
+    right = right or r
+  end
 
   if top or bottom then
     self.velY = 0
@@ -63,7 +70,7 @@ function Player:fixedUpdate()
       self.jumpTicks = 0
     end
     if self.jumpTicks < Player.MAX_JUMP_TICKS then
-      self.velY = -3.5
+      self.velY = -3.5 - math.abs(self.velX/10)
     end
     self.jumpTicks = self.jumpTicks + 1
   end
