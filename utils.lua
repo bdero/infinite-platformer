@@ -1,6 +1,7 @@
 local utils = {}
 
 utils.MAX_NUMBER = 900719925474099
+utils.SHA1_MAX = 1461501637330902918203684832716283019655932542976
 
 function utils.asymptote(dist, divisor, dt)
   return (1 - 1/(dt/divisor + 1))*dist

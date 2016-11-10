@@ -1,4 +1,5 @@
 class = require 'lib/middleclass'
+sha1 = require 'lib/sha1'
 utils = require 'utils'
 Camera = require 'camera'
 
@@ -15,12 +16,17 @@ Map.static.draw = function()
 end
 
 function Map:initialize(seed)
-  math.randomseed(os.clock())
-  self.seed = seed or math.random()*99999999
+  self:setSeed(os.date())
 end
 
 function Map:setActive()
   Map.ACTIVE = self
+end
+
+function Map:setSeed(seedSource)
+  local hash = sha1.binary(seedSource)
+  local bytes = table.concat({string.byte(hash, 0, -1)})
+  self.seed = tonumber(bytes)/utils.SHA1_MAX
 end
 
 function Map:sample(x, y)

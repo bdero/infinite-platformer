@@ -10,8 +10,8 @@ local _fixedUpdateTime = 0
 function love.load(arg)
   local sizeX, sizeY = 640, 480
 
-  love.window.setMode(sizeX, sizeY, {
-    resizable=true, minwidth=130, minheight=100, highdpi=true
+  love.window.setMode(1024, 768, {
+    resizable=true, minwidth=130, minheight=100--, highdpi=true
   })
   love.window.setTitle("Test")
   love.graphics.setBackgroundColor(200, 210, 230)
