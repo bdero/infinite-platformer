@@ -1,6 +1,7 @@
 local class = require 'lib/middleclass'
-local BoundingBox = require 'mixins/boundingbox'
 local utils = require 'utils'
+local BoundingBox = require 'mixins/boundingbox'
+local Camera = require 'camera'
 
 local Player = class('Player')
 
@@ -9,7 +10,10 @@ Player.y = 0
 Player.velX = 0
 Player.velY = 0
 Player.accX = 0
-Player.accY = 0.098
+Player.accY = 0.098*1.5
+Player.jumpTicks = 0
+
+Player.static.MAX_JUMP_TICKS = 20
 
 Player:include(BoundingBox)
 
@@ -30,7 +34,7 @@ function Player:fixedUpdate()
     self.accX = self.accX + 0.1
   end
 
-  self.velX = utils.clamp(-3, 3, self.velX + self.accX)
+  self.velX = utils.clamp(-5, 5, self.velX + self.accX)
   self.velY = self.velY + self.accY
 
   if not leftPressed and self.velX < 0 then
@@ -52,13 +56,21 @@ function Player:fixedUpdate()
     self.velX = 0
   end
 
-  if jumpPressed and bottom then
-    self.velY = -3.5
+  if not jumpPressed then
+    self.jumpTicks = Player.MAX_JUMP_TICKS
+  else
+    if bottom then
+      self.jumpTicks = 0
+    end
+    if self.jumpTicks < Player.MAX_JUMP_TICKS then
+      self.velY = -3.5
+    end
+    self.jumpTicks = self.jumpTicks + 1
   end
 end
 
 function Player:update(dt)
-
+  Camera.ACTIVE:setPosition(self.x + self.velX*70, self.y + self.velY*60)
 end
 
 function Player:draw()
