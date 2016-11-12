@@ -81,7 +81,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  love.graphics.setColor(100, 100, 100)
+  love.graphics.setColor(150, 150, 150)
   love.graphics.rectangle('fill', self:bbGetRect():getXYWH())
 end
 

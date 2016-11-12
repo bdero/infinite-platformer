@@ -2,7 +2,7 @@ local Camera = require 'camera'
 local Map = require 'map'
 local Player = require 'player'
 
-local camera, map, player
+local canvas, camera, map, player
 
 local FIXED_UPDATE_RATE = 1/120
 local _fixedUpdateTime = 0
@@ -43,8 +43,20 @@ function love.fixedUpdate()
 end
 
 function love.draw()
-  Camera.set()
-    Map.draw()
-    player:draw()
-  Camera.unset()
+  if not canvas or canvas:getDimensions() ~= love.graphics.getDimensions() then
+    canvas = love.graphics.newCanvas(love.graphics.getDimensions())
+  end
+
+  love.graphics.setCanvas(canvas)
+    love.graphics.clear()
+    love.graphics.setBlendMode('alpha')
+
+    Camera.set()
+      Map.draw()
+      player:draw()
+    Camera.unset()
+  love.graphics.setCanvas()
+
+  love.graphics.setBlendMode('alpha', 'premultiplied')
+  love.graphics.draw(canvas, 0, 0)
 end
