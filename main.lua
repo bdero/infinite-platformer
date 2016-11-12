@@ -61,7 +61,7 @@ function love.draw()
 
   love.graphics.setBlendMode('alpha', 'premultiplied')
   love.graphics.setShader(volumetricShader)
-    print(love.graphics.getDimensions()/2)
+    volumetricShader:send('time', love.timer.getTime())
     volumetricShader:send('sun_pos', {love.graphics.getWidth()/2, love.graphics.getHeight()/2, -500})
     love.graphics.draw(canvas, 0, 0)
   love.graphics.setShader()
