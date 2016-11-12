@@ -63,8 +63,8 @@ function Camera:set()
   local scale = self:getViewportScale()
   love.graphics.scale(1/self.scaleX*scale, 1/self.scaleY*scale)
 
-  local shakeX = love.math.noise(self.time*self.shakeFrequency)*self.shakeMagnitude
-  local shakeY = love.math.noise(self.time*self.shakeFrequency + 900.327)*self.shakeMagnitude
+  local shakeX = (love.math.noise(self.time*self.shakeFrequency) - 0.5)*self.shakeMagnitude
+  local shakeY = (love.math.noise(self.time*self.shakeFrequency + 900.327) - 0.5)*self.shakeMagnitude
 
   local x, y = self.currentX + shakeX, self.currentY + shakeY
   if self.centered then

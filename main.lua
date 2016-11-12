@@ -2,7 +2,7 @@ local Camera = require 'camera'
 local Map = require 'map'
 local Player = require 'player'
 
-local canvas, camera, map, player
+local canvas, volumetricShader, camera, map, player
 
 local FIXED_UPDATE_RATE = 1/120
 local _fixedUpdateTime = 0
@@ -24,6 +24,8 @@ function love.load(arg)
   map:setActive()
 
   player = Player()
+
+  volumetricShader = love.graphics.newShader('shaders/volumetric.frag')
 end
 
 function love.update(dt)
@@ -58,5 +60,9 @@ function love.draw()
   love.graphics.setCanvas()
 
   love.graphics.setBlendMode('alpha', 'premultiplied')
-  love.graphics.draw(canvas, 0, 0)
+  love.graphics.setShader(volumetricShader)
+    print(love.graphics.getDimensions()/2)
+    volumetricShader:send('sun_pos', {love.graphics.getWidth()/2, love.graphics.getHeight()/2, -500})
+    love.graphics.draw(canvas, 0, 0)
+  love.graphics.setShader()
 end
