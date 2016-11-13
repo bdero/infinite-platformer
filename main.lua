@@ -1,8 +1,9 @@
+local Engine = require 'engine'
 local Camera = require 'camera'
 local Map = require 'map'
 local Player = require 'player'
 
-local canvas, environmentShader, camera, map, player
+local engine, canvas, environmentShader, camera, map, player
 
 local FIXED_UPDATE_RATE = 1/120
 local _fixedUpdateTime = 0
@@ -24,6 +25,11 @@ function love.load(arg)
 
   player = Player()
 
+  engine = Engine()
+  engine:add(camera)
+  engine:add(map)
+  engine:add(player)
+
   environmentShader = love.graphics.newShader('shaders/environment.frag')
 end
 
@@ -35,12 +41,11 @@ function love.update(dt)
       _fixedUpdateTime = _fixedUpdateTime - FIXED_UPDATE_RATE
     end
   end
-  player:update(dt)
-  Camera.update(dt)
+  engine:update(dt)
 end
 
 function love.fixedUpdate()
-  player:fixedUpdate()
+  engine:fixedUpdate()
 end
 
 function love.draw()
@@ -53,8 +58,7 @@ function love.draw()
     love.graphics.setBlendMode('alpha')
 
     Camera.set()
-      Map.draw()
-      player:draw()
+      engine:draw()
     Camera.unset()
   love.graphics.setCanvas()
 
