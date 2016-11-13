@@ -1,8 +1,14 @@
 uniform vec3 sun_pos;
+uniform vec2 camera_pos;
+uniform vec2 screen_size;
 uniform float time;
+uniform float viewport_scale;
 
 const float SAMPLE_STEPS = 15;
-const vec4 SUN_COLOR = vec4(1, 1, 1, 1);
+const vec4 SUN_COLOR = vec4(1, 0.95, 0.85, 1);
+const vec4 SKY_COLOR = vec4(0.541, 0.663, 0.839, 1);
+const vec4 CLOUD_COLOR = vec4(1, 1, 1, 1);
+const float SUN_RADIUS = 90;
 
 
 // ***** Noise functions ******************************************************
@@ -115,21 +121,64 @@ float snoise(vec3 v)
                                 dot(p2,x2), dot(p3,x3) ) );
 }
 
+float snoiseFractal(vec3 m) {
+  return 0.5333333* snoise(m)
+    +0.2666667* snoise(2.0*m)
+    +0.1333333* snoise(4.0*m)
+    +0.0666667* snoise(8.0*m);
+}
+
 
 // ***** Effect implementation ************************************************
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+  vec4 texture_color = Texel(texture, texture_coords);
   vec2 texture_ratio = texture_coords/screen_coords;
 
-  // Volumetric lighting
-  float intensity = 0;
+
+  // ***** Sky color **********************************************************
+
+  // Start with the default sky color
+  vec4 sky_color = SKY_COLOR;
+
+  float sun_intensity = 0;
+  // Sun
+  sun_intensity = min(1, pow(0.95, distance(screen_coords, sun_pos.xy)/viewport_scale - SUN_RADIUS));
+  sky_color = mix(sky_color, SUN_COLOR, sun_intensity);
+
+  // Clouds
+  vec2 cloud_noise_pos = (camera_pos/5 + (screen_coords - screen_size/2)/viewport_scale).xy/1000;
+  float cloud_noise = snoiseFractal(vec3(cloud_noise_pos, time/30));
+  sky_color = mix(sky_color, CLOUD_COLOR, max(0, cloud_noise*5 - 0.4));
+
+
+  // ***** Volumetric lighting ************************************************
+
+  // Calculate volumetric lighting intensity
+  float volumetric_intensity = 0;
   for (float i = rand(screen_coords); i < SAMPLE_STEPS; i++) {
     vec3 sample_coord = vec3(screen_coords, i*100);
-    vec3 world_intersect = normalize(sample_coord - sun_pos)*(-sun_pos.z) + sun_pos;
-    intensity += (1 - Texel(texture, vec2(world_intersect)*texture_ratio).a)/SAMPLE_STEPS;
+    vec3 world_intersect_pos = normalize(sample_coord - sun_pos)*(-sun_pos.z) + sun_pos;
+    float world_intersect_alpha = Texel(texture, world_intersect_pos.xy*texture_ratio).a;
+    volumetric_intensity += (1 - world_intersect_alpha)/SAMPLE_STEPS;
   }
-
-  vec4 texturecolor = Texel(texture, texture_coords);
+  // Apply animated simplex noise to volumetric lighting to make it spotty
   float lighting_noise = 0.25 + snoise(vec3(screen_coords*texture_ratio*2, time/1.5))/8;
-  return mix(texturecolor*color, SUN_COLOR, intensity*lighting_noise);
+  volumetric_intensity *= lighting_noise;
+  // Dampen the volumetric lighting effect on the sky
+  volumetric_intensity *= 0.5 + texture_color.a/2;
+
+
+  // ***** Mix the final color ************************************************
+
+  // Start with the original color passed in
+  vec4 final_color = texture_color*color;
+
+  // Render the sky
+  final_color = mix(sky_color, final_color, texture_color.a);
+
+  // Mix the volumetric light into the scene
+  final_color = mix(final_color, SUN_COLOR, volumetric_intensity);
+
+  return final_color;
 }

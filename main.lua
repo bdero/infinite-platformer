@@ -14,7 +14,6 @@ function love.load(arg)
     resizable=true, minwidth=130, minheight=100--, highdpi=true
   })
   love.window.setTitle("Test")
-  love.graphics.setBackgroundColor(200, 210, 230)
 
   camera = Camera({idealX=sizeX, idealY=sizeY})
   camera:setActive()
@@ -63,6 +62,9 @@ function love.draw()
   love.graphics.setShader(volumetricShader)
     volumetricShader:send('time', love.timer.getTime())
     volumetricShader:send('sun_pos', {love.graphics.getWidth()/2, love.graphics.getHeight()/2, -500})
+    volumetricShader:send('camera_pos', {camera.ACTIVE.currentX, camera.ACTIVE.currentY})
+    volumetricShader:send('viewport_scale', camera.ACTIVE:getViewportScale())
+    volumetricShader:send('screen_size', {love.graphics.getDimensions()})
     love.graphics.draw(canvas, 0, 0)
   love.graphics.setShader()
 end
