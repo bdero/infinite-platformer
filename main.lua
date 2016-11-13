@@ -2,7 +2,7 @@ local Camera = require 'camera'
 local Map = require 'map'
 local Player = require 'player'
 
-local canvas, volumetricShader, camera, map, player
+local canvas, environmentShader, camera, map, player
 
 local FIXED_UPDATE_RATE = 1/120
 local _fixedUpdateTime = 0
@@ -24,7 +24,7 @@ function love.load(arg)
 
   player = Player()
 
-  volumetricShader = love.graphics.newShader('shaders/volumetric.frag')
+  environmentShader = love.graphics.newShader('shaders/environment.frag')
 end
 
 function love.update(dt)
@@ -59,12 +59,12 @@ function love.draw()
   love.graphics.setCanvas()
 
   love.graphics.setBlendMode('alpha', 'premultiplied')
-  love.graphics.setShader(volumetricShader)
-    volumetricShader:send('time', love.timer.getTime())
-    volumetricShader:send('sun_pos', {love.graphics.getWidth()/2, love.graphics.getHeight()/2, -500})
-    volumetricShader:send('camera_pos', {camera.ACTIVE.currentX, camera.ACTIVE.currentY})
-    volumetricShader:send('viewport_scale', camera.ACTIVE:getViewportScale())
-    volumetricShader:send('screen_size', {love.graphics.getDimensions()})
+  love.graphics.setShader(environmentShader)
+    environmentShader:send('time', love.timer.getTime())
+    environmentShader:send('sun_pos', {love.graphics.getWidth()/2, love.graphics.getHeight()/2, -500})
+    environmentShader:send('camera_pos', {camera.ACTIVE.currentX, camera.ACTIVE.currentY})
+    environmentShader:send('viewport_scale', camera.ACTIVE:getViewportScale())
+    environmentShader:send('screen_size', {love.graphics.getDimensions()})
     love.graphics.draw(canvas, 0, 0)
   love.graphics.setShader()
 end
